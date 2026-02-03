@@ -8,7 +8,6 @@ common tasks like clicklock and key releases.
 """
 
 import random
-import time
 from enum import Enum, auto
 from time import sleep
 from typing import Literal
@@ -68,7 +67,6 @@ class Tackle:
         self.available = True
         self.gear_ratio_changed = False
         self.stage = None
-        self.last_strike_time = 0.0
 
     def check_rare_events(self) -> None:
         """Check if the game disconnected or the boat ticket expired."""
@@ -192,19 +190,9 @@ class Tackle:
         if self.stage != StageId.PULL:
             self.stage = StageId.PULL
             self.timer.set_timeout_start_time()
-            #
-            self.last_strike_time = time.time()
-            if self.cfg.PROFILE.MODE in ("spin", "bottom"):
-                 self.strike_fish()
         while True:
             if self.detection.is_retrieval_finished():
                 return
-            
-            if self.cfg.PROFILE.MODE in ("spin", "bottom"):
-                current_time = time.time()
-                if current_time - self.last_strike_time >= 30:
-                    self.strike_fish()
-                    self.last_strike_time = current_time
 
             if self.cfg.ARGS.LIFT:
                 self.hold_mouse_button(LIFT_DURATION, button="right")
@@ -530,9 +518,3 @@ class Tackle:
         # + 0.1 due to pag.mouseDown() delay
         if self.cfg.BOT.CLICK_LOCK and duration >= 2.1:
             pag.click()
-
-    def strike_fish(self) -> None:
-        logger.info("Performing fish striking (Ctrl + Right Mouse Button)")
-        with pag.hold("ctrl"):  
-             pag.click(button="right")  
-        sleep(0.1) 

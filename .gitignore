@@ -13,19 +13,3 @@ src/__pycache__/
 /tests/
 /logs/
 /dist/
-
-# Python 虚拟环境通用忽略规则
-venv/
-env/
-.venv/
-ENV/
-env.bak/
-venv.bak/
-
-# 可选：忽略 Python 编译文件、缓存等
-__pycache__/
-*.py[cod]
-*.so
-.pytest_cache/
-.coverage
-htmlcov/
