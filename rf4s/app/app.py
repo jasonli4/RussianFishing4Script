@@ -135,9 +135,9 @@ class BotApp(App):
 
     def display_info(self):
         settings = Table(
-            title="Settings", show_header=False, box=box.HEAVY, min_width=36
+            title="设置", show_header=False, box=box.HEAVY, min_width=36
         )
-        settings.add_row("LAUNCH OPTIONS (FINAL)", " ".join(sys.argv[1:]))
+        settings.add_row("启动选项（最终）", " ".join(sys.argv[1:]))
         for k, v in self.cfg.PROFILE.items():
             if k != "DESCRIPTION":
                 settings.add_row(k, str(v))
@@ -145,7 +145,7 @@ class BotApp(App):
         if self.cfg.PROFILE.DESCRIPTION:
             utils.print_description_box(self.cfg.PROFILE.DESCRIPTION)
         utils.print_usage_box(
-            f"Press {self.cfg.KEY.PAUSE} to pause, {self.cfg.KEY.QUIT} to quit."
+            f"按 {self.cfg.KEY.PAUSE} 暂停，{self.cfg.KEY.QUIT} 退出。"
         )
 
     def validate_smtp(self) -> None:
@@ -165,16 +165,16 @@ class BotApp(App):
                 )
         except smtplib.SMTPAuthenticationError:
             logger.critical(
-                "Invalid email address or app password\n"
-                "Check BOT.NOTIFICATION.EMAIL\n"
-                "Check BOT.NOTIFICATION.PASSWORD\n"
-                "For Gmail users, please refer to: "
+                "无效的电子邮件地址或应用密码\n"
+                "检查 BOT.NOTIFICATION.EMAIL\n"
+                "检查 BOT.NOTIFICATION.PASSWORD\n"
+                "Gmail用户请参考："
                 "https://support.google.com/accounts/answer/185833\n"
             )
             utils.safe_exit()
         except (TimeoutError, gaierror):
             logger.critical(
-                "Invalid BOT.NOTIFICATION.SMTP_SERVER or connection timed out"
+                "无效的 BOT.NOTIFICATION.SMTP_SERVER 或连接超时"
             )
             utils.safe_exit()
 
@@ -182,8 +182,8 @@ class BotApp(App):
         if not self.cfg.ARGS.DISCORD or self.cfg.BOT.NOTIFICATION.DISCORD_WEBHOOK_URL:
             return
         logger.critical(
-            "BOT.NOTIFICATION.DISCORD_WEBHOOK_URL is not set\n"
-            "To make a webhook, please refer to "
+            "未设置 BOT.NOTIFICATION.DISCORD_WEBHOOK_URL\n"
+            "要创建webhook，请参考"
             "https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks"
         )
         utils.safe_exit()
@@ -191,7 +191,7 @@ class BotApp(App):
     def validate_miaotixing(self) -> None:
         if not self.cfg.ARGS.MIAOTIXING or self.cfg.BOT.NOTIFICATION.MIAO_CODE:
             return
-        logger.critical("BOT.NOTIFICATION.MIAO_CODE is not set.")
+        logger.critical("未设置 BOT.NOTIFICATION.MIAO_CODE。")
         utils.safe_exit()
 
     def validate_telegram(self):
@@ -207,14 +207,14 @@ class BotApp(App):
 
         valid = True
         if not _is_telegram_bot_valid():
-            logger.critical("Invalid BOT.NOTIFICATION.TELEGRAM_BOT_TOKEN")
+            logger.critical("无效的 BOT.NOTIFICATION.TELEGRAM_BOT_TOKEN")
             valid = False
         if self.cfg.BOT.NOTIFICATION.TELEGRAM_CHAT_ID == -1:
-            logger.critical("BOT.NOTIFICATION.TELEGRAM_CHAT_ID is not set")
+            logger.critical("未设置 BOT.NOTIFICATION.TELEGRAM_CHAT_ID")
             valid = False
         if not valid:
             logger.critical(
-                "Please refer to: "
+                "请参考："
                 "https://gist.github.com/nafiesl/4ad622f344cd1dc3bb1ecbe468ff9f8a",
             )
             utils.safe_exit()
@@ -247,36 +247,37 @@ class BotApp(App):
                 logger.warning("Missing setting: 'PROFILE.%s.%s'", profile_name, key)
 
     def display_profiles(self) -> None:
-        """Display a table of available profiles for user selection.
+        """显示可用配置文件表供用户选择。
 
-        Shows a formatted table with profile IDs and names.
+        显示带有配置文件ID和名称的格式化表格。
         """
         profiles = Table(
-            title="Select a profile to start ⚙️",
+            title="选择一个配置文件开始 ⚙️",
             box=box.HEAVY,
             show_header=False,
             min_width=36,
         )
         for i, profile in enumerate(self.cfg.PROFILE):
-            profiles.add_row(f"{i:>2}. {profile}")
+            profile_name = profile
+            description = self.cfg.PROFILE[profile_name].DESCRIPTION
+            profiles.add_row(f"{i:>2}. {profile_name} - {description}")
         print(profiles)
 
     def get_pid(self) -> None:
-        """Prompt the user to enter a profile ID and validate the input.
+        """提示用户输入配置文件ID并验证输入。
 
-        Continuously prompts until a valid profile ID is entered or the
-        user chooses to quit.
+        持续提示直到输入有效的配置文件ID或用户选择退出。
         """
-        utils.print_usage_box("Enter profile id to use, q to quit.")
+        utils.print_usage_box("输入要使用的配置文件ID，q退出。")
 
         while True:
             user_input = input(">>> ")
             if user_input.isdigit() and 0 <= int(user_input) < len(self.cfg.PROFILE):
                 break
             if user_input == "q":
-                print("Bye.")
+                print("再见。")
                 sys.exit()
-            utils.print_error("Invalid profile id, please try again.")
+            utils.print_error("无效的配置文件ID，请重试。")
 
         self.args.pid = int(user_input)
 
@@ -324,40 +325,40 @@ class BotApp(App):
         self.cfg.ARGS = config.dict_to_cfg(vars(self.args))
 
     def validate_game_window(self) -> None:
-        """Set up and validate the game window.
+        """设置并验证游戏窗口。
 
-        Creates a Window object, checks if the window size is supported,
-        and disables incompatible features if needed.
+        创建窗口对象，检查窗口大小是否受支持，
+        并在需要时禁用不兼容的功能。
         """
         if self.window.is_title_bar_exist():
-            logger.info("Window mode detected. Don't move the game window")
+            logger.info("检测到窗口模式。不要移动游戏窗口")
         if self.window.is_size_supported():
-            logger.info("Supported window size. Don't change the game window size")
+            logger.info("支持的窗口大小。不要更改游戏窗口大小")
             return
 
         window_resolution = self.window.get_resolution_str()
         if window_resolution == "0x0":
-            logger.critical("'Fullscreen mode' is not supported")
+            logger.critical("不支持全屏模式")
             utils.safe_exit()
 
         if self.cfg.PROFILE.MODE in ("telescopic", "bolognese"):
             logger.critical(
-                "Fishing mode '%s' doesn't support window size '%s'",
+                "钓鱼模式 '%s' 不支持窗口大小 '%s'",
                 self.cfg.PROFILE.MODE,
                 self.window.get_resolution_str(),
             )
             utils.safe_exit()
 
         logger.warning(
-            "Unsupported window size '%s'\n"
-            "Supported window size: '2560x1440', '1920x1080' or '1600x900'\n"
-            "Will search the image on the screen instead of the game window",
+            "不支持的窗口大小 '%s'\n"
+            "支持的窗口大小：'2560x1440'、'1920x1080' 或 '1600x900'\n"
+            "将在屏幕而不是游戏窗口上搜索图像",
             self.window.get_resolution_str(),
         )
         logger.error(
-            "Snag detection will be disabled\n"
-            "Spooling detection will be disabled\n"
-            "Auto friction brake will be disabled\n"
+            "挂底检测将被禁用\n"
+            "绕线检测将被禁用\n"
+            "自动摩擦制动将被禁用\n"
         )
 
         self.cfg.ARGS.FRICTION_BRAKE = False
@@ -374,41 +375,41 @@ class BotApp(App):
             or self.cfg.ARGS.PVA
         ):
             logger.info(
-                "Some features require you to add the item to your favorites, "
-                "make sure you have done so"
+                "某些功能需要您将物品添加到收藏夹，"
+                "请确保已这样做"
             )
 
     def validate_screenshot_notification(self):
         if self.cfg.ARGS.SCREENSHOT and self.cfg.ARGS.MIAOTIXING:
             logger.warning(
-                "Miaotixing doesn't support image message, no screenshot will be sent"
+                "喵提醒不支持图片消息，不会发送截图"
             )
 
     def validate_spool_detection(self):
         if self.cfg.ARGS.RAINBOW is None:
             logger.warning(
-                "Default retrieval detection mode detected, fully spool your reel"
+                "检测到默认收线检测模式，请完全收起您的鱼线"
             )
 
     def _on_release(self, key: keyboard.KeyCode) -> None:
-        """Monitor user's keystrokes and convert a key press to a CTRL_C_EVENT.
+        """监控用户的击键并将按键转换为CTRL_C_EVENT。
 
-        :param key: The key that was released.
+        :param key: 被释放的键。
         :type key: keyboard.KeyCode
 
-        Exits the application when the configured quit key is pressed.
+        当按下配置的退出键时退出应用程序。
         """
-        # Trigger CTRL_C_EVENT, which will be caught in start() to simulate pressing
-        # CTRL-C to terminate the script.
+        # 触发CTRL_C_EVENT，将在start()中被捕获以模拟按下
+        # CTRL-C来终止脚本。
         key = str(key).lower()
         if key == str(keyboard.KeyCode.from_char(self.cfg.KEY.QUIT)):
             os.kill(os.getpid(), signal.CTRL_C_EVENT)
             return False
         if key == str(keyboard.KeyCode.from_char(self.cfg.KEY.PAUSE)):
-            logger.info("Pausing the bot")
+            logger.info("暂停机器人")
             os.kill(os.getpid(), signal.CTRL_C_EVENT)
             self.paused = True
-            logger.info("Bot paused")  # Don't remove this! It messes with signal?
+            logger.info("机器人已暂停")  # 不要删除这个！它会干扰信号？
             return False
 
     def _pause_wait(self, key: keyboard.KeyCode) -> None:
@@ -445,10 +446,10 @@ class BotApp(App):
                     break
 
                 utils.print_usage_box(
-                    f"Press {self.cfg.KEY.PAUSE} to reload config and restart."
+                    f"按 {self.cfg.KEY.PAUSE} 重新加载配置并重启。"
                 )
                 utils.print_hint_box(
-                    "Any modifications made to LAUNCH_OPTIONS will be ignored."
+                    "对LAUNCH_OPTIONS所做的任何修改将被忽略。"
                 )
                 with self.player.hold_keys(mouse=False, shift=False, reset=True):
                     pause_listener = keyboard.Listener(on_release=self._pause_wait)
@@ -457,7 +458,7 @@ class BotApp(App):
                 while pause_listener.is_alive():
                     sleep(THREAD_CHECK_DELAY)
 
-                logger.info("Restarting bot without resetting records")
+                logger.info("重启机器人而不重置记录")
                 self.reload_cfg()
                 self.player = Player(
                     self.cfg,
@@ -467,7 +468,7 @@ class BotApp(App):
                 )
                 self.paused = False
 
-        self.player.handle_termination("Terminated by user", shutdown=False, send=False)
+        self.player.handle_termination("用户终止", shutdown=False, send=False)
 
 
 class CraftApp(App):
@@ -486,9 +487,9 @@ class CraftApp(App):
         self.cfg.freeze()
 
         settings = Table(
-            title="Settings", show_header=False, box=box.HEAVY, min_width=36
+            title="设置", show_header=False, box=box.HEAVY, min_width=36
         )
-        settings.add_row("LAUNCH OPTIONS (FINAL)", " ".join(sys.argv[1:]))
+        settings.add_row("启动选项（最终）", " ".join(sys.argv[1:]))
         print(settings)
 
         self.result = CraftResult()
@@ -496,28 +497,28 @@ class CraftApp(App):
         self.detection = Detection(self.cfg, self.window)
 
     def craft_item(self, accept_key: str) -> None:
-        """Craft an item.
+        """制作物品。
 
-        :param craft_delay: Delay in seconds before accepting the crafted item.
+        :param craft_delay: 接受制作物品前的延迟（秒）。
         :type craft_delay: float
-        :param accept_delay: Delay in seconds after accepting the crafted item.
+        :param accept_delay: 接受制作物品后的延迟（秒）。
         :type accept_delay: float
-        :param accept_key: Key to press after accepting the crafted item.
+        :param accept_key: 接受制作物品后按下的键。
         :type accept_key: str
         """
-        logger.info("Crafting item")
+        logger.info("制作物品")
         pag.click()
         sleep(add_jitter(CRAFT_DELAY))
         self.result.material += 1
         while True:
             if self.detection.is_operation_success():
-                logger.info("Crafting successed")
+                logger.info("制作成功")
                 self.result.success += 1
                 pag.press(accept_key)
                 break
 
             if self.detection.is_operation_failed():
-                logger.warning("Crafting failed")
+                logger.warning("制作失败")
                 self.result.fail += 1
                 pag.press("space")
                 break
@@ -539,26 +540,26 @@ class CraftApp(App):
             return False
 
     def start(self) -> None:
-        """Main loop for crafting items.
+        """制作物品的主循环。
 
-        Executes the primary loop for crafting items until materials are exhausted or
-        the crafting limit is reached. Supports fast crafting mode and discarding items.
+        执行制作物品的主循环，直到材料用完或达到制作限制。
+        支持快速制作模式和丢弃物品。
         """
         listener = keyboard.Listener(on_release=self._on_release)
         listener.start()
 
         try:
-            utils.print_usage_box(f"Press {self.cfg.KEY.QUIT} to quit.")
-            logger.warning("This might get you banned, use at your own risk")
-            logger.warning("Use Razor or Logitech macros instead")
+            utils.print_usage_box(f"按 {self.cfg.KEY.QUIT} 退出。")
+            logger.warning("这可能会导致您被封禁，使用风险自负")
+            logger.warning("建议改用Razer或Logitech宏")
             random.seed(datetime.now().timestamp())
             accept_key = "backspace" if self.cfg.ARGS.DISCARD else "space"
             self.window.activate_game_window()
             make_button_position = self.detection.get_make_button_position()
             if make_button_position is None:
                 logger.critical(
-                    "Make button not found, please set the interface scale to "
-                    "1x or move your mouse around"
+                    "未找到制作按钮，请将界面缩放设置为"
+                    "1x或移动您的鼠标"
                 )
                 self.window.activate_script_window()
                 sys.exit()
@@ -568,10 +569,10 @@ class CraftApp(App):
                     not self.cfg.ARGS.IGNORE
                     and not self.detection.is_material_complete()
                 ):
-                    logger.critical("Running out of materials")
+                    logger.critical("材料用尽")
                     break
                 if self.result.material == self.cfg.ARGS.CRAFT_LIMIT:
-                    logger.info("Crafting limit reached")
+                    logger.info("达到制作限制")
                     break
                 self.craft_item(accept_key)
                 pag.moveTo(make_button_position)
@@ -603,8 +604,8 @@ class MoveApp(App):
         self.cfg.freeze()
 
         utils.print_usage_box(
-            f"Press {self.cfg.KEY.MOVE_PAUSE} to pause, "
-            f"{self.cfg.KEY.MOVE_QUIT} to quit.",
+            f"按 {self.cfg.KEY.MOVE_PAUSE} 暂停，"
+            f"{self.cfg.KEY.MOVE_QUIT} 退出。",
         )
 
         self.result = Result()
@@ -663,16 +664,16 @@ class HarvestApp(App):
         self.cfg.freeze()
 
         settings = Table(
-            title="Settings", show_header=False, box=box.HEAVY, min_width=36
+            title="设置", show_header=False, box=box.HEAVY, min_width=36
         )
-        settings.add_row("LAUNCH OPTIONS (FINAL)", " ".join(sys.argv[1:]))
-        settings.add_row("Power saving", str(self.cfg.HARVEST.POWER_SAVING))
-        settings.add_row("Check delay", str(self.cfg.HARVEST.CHECK_DELAY))
-        settings.add_row("Energy threshold", str(self.cfg.STAT.ENERGY_THRESHOLD))
-        settings.add_row("Hunger threshold", str(self.cfg.STAT.HUNGER_THRESHOLD))
-        settings.add_row("Comfort threshold", str(self.cfg.STAT.COMFORT_THRESHOLD))
+        settings.add_row("启动选项（最终）", " ".join(sys.argv[1:]))
+        settings.add_row("节能模式", str(self.cfg.HARVEST.POWER_SAVING))
+        settings.add_row("检查延迟", str(self.cfg.HARVEST.CHECK_DELAY))
+        settings.add_row("能量阈值", str(self.cfg.STAT.ENERGY_THRESHOLD))
+        settings.add_row("饥饿阈值", str(self.cfg.STAT.HUNGER_THRESHOLD))
+        settings.add_row("舒适度阈值", str(self.cfg.STAT.COMFORT_THRESHOLD))
         print(settings)
-        utils.print_usage_box(f"Press {self.cfg.KEY.QUIT} to quit.")
+        utils.print_usage_box(f"按 {self.cfg.KEY.QUIT} 退出。")
 
         self.result = HarvestResult()
         self.timer = Timer(self.cfg)
@@ -680,26 +681,26 @@ class HarvestApp(App):
         self.detection = Detection(self.cfg, self.window)
 
     def harvest_baits(self) -> None:
-        """Harvest baits using shovel/spoon.
+        """使用铲子/勺子收集饵料。
 
-        The digging tool should be pulled out before calling this method. Waits for
-        harvest success and presses the spacebar to complete the process.
+        在调用此方法之前应该先拿出挖掘工具。等待
+        收集成功并按下空格键完成过程。
         """
-        logger.info("Harvesting baits")
+        logger.info("收集饵料")
         pag.click()
         while not self.detection.is_harvest_success():
             sleep(add_jitter(LOOP_DELAY))
         pag.press("space")
-        logger.info("Baits harvested succussfully")
+        logger.info("饵料收集成功")
         sleep(ANIMATION_DELAY)
 
     def refill_player_stats(self) -> None:
-        """Refill player stats using tea and carrot."""
+        """使用茶和胡萝卜补充玩家属性。"""
         if not self.cfg.ARGS.REFILL:
             return
 
-        logger.info("Refilling player stats")
-        # Comfort is affected by weather, add a check to avoid over drink
+        logger.info("补充玩家属性")
+        # 舒适度受天气影响，添加检查以避免过度饮用
         if self.detection.is_comfort_low() and self.timer.is_tea_drinkable():
             self._use_item("tea")
             self.result.tea += 1
@@ -721,16 +722,16 @@ class HarvestApp(App):
             return False
 
     def _use_item(self, item: str) -> None:
-        """Access an item by name using quick selection shortcut or menu.
+        """使用快捷选择或菜单按名称访问物品。
 
-        :param item: The name of the item to access.
+        :param item: 要访问的物品名称。
         :type item: str
         """
-        logger.info("Using item: %s", item)
+        logger.info("使用物品：%s", item)
         key = str(self.cfg.KEY[item.upper()])
-        if key != "-1":  # Use shortcut
+        if key != "-1":  # 使用快捷键
             pag.press(key)
-        else:  # Open food menu
+        else:  # 打开食物菜单
             with pag.hold("t"):
                 sleep(ANIMATION_DELAY)
                 food_position = self.detection.get_food_position(item)
@@ -739,7 +740,7 @@ class HarvestApp(App):
         sleep(add_jitter(ANIMATION_DELAY))
 
     def start(self) -> None:
-        """Wrapper method that handle window activation and result display."""
+        """处理窗口激活和结果显示的包装方法。"""
         listener = keyboard.Listener(on_release=self._on_release)
         listener.start()
 
@@ -753,7 +754,7 @@ class HarvestApp(App):
                     self.harvest_baits()
                     self.result.bait += 1
                 else:
-                    logger.info("Energy is not high enough")
+                    logger.info("能量不足")
 
                 if self.cfg.HARVEST.POWER_SAVING:
                     pag.press("esc")
@@ -799,15 +800,15 @@ class CalculateApp:
         _ = cfg, args, parser
         self.result = None
         self.parts = [
-            Part(name="Rod", prompt="Load capacity (kg)", color="orange1", base=0.3),
-            Part(name="Reel mechanism", prompt="Mech (kg)", color="plum1", base=0.3),
-            Part(name="Reel friction brake", prompt="Drag (kg)", color="gold1"),
-            Part(name="Fishing line", prompt="Load capacity (kg)", color="salmon1"),
-            Part(name="Leader", prompt="Load capacity (kg)", color="pale_green1"),
-            Part(name="Hook", prompt="Load capacity (kg)", color="sky_blue1"),
+            Part(name="鱼竿", prompt="负载能力（公斤）", color="orange1", base=0.3),
+            Part(name="卷线器机构", prompt="机构（公斤）", color="plum1", base=0.3),
+            Part(name="卷线器摩擦制动", prompt="阻力（公斤）", color="gold1"),
+            Part(name="鱼线", prompt="负载能力（公斤）", color="salmon1"),
+            Part(name="前导线", prompt="负载能力（公斤）", color="pale_green1"),
+            Part(name="鱼钩", prompt="负载能力（公斤）", color="sky_blue1"),
         ]
         self.friction_brake = next(
-            part for part in self.parts if part.name == "Reel friction brake"
+            part for part in self.parts if part.name == "卷线器摩擦制动"
         )
 
     def calculate_tackle_stats(self):
@@ -818,9 +819,9 @@ class CalculateApp:
                     if part.pre_real_load_capacity is not None:
                         raise exceptions.PreviousError
                     else:
-                        utils.print_error(f"{part.name}'s value not found.")
+                        utils.print_error(f"未找到 {part.name} 的值。")
                 part.load_capacity = self.get_validated_input(part, part.prompt)
-                part.wear = self.get_validated_input(part, "Wear (%)")
+                part.wear = self.get_validated_input(part, "磨损度（%）")
             except exceptions.SkipError:
                 if part.real_load_capacity is not None:
                     part.real_load_capacity = None
@@ -832,7 +833,7 @@ class CalculateApp:
                 previous = True
             else:
                 part.calculate_real_load_capacity()
-            self.result.add_row(part.name, f"{part.real_load_capacity:.2f} kg")
+            self.result.add_row(part.name, f"{part.real_load_capacity:.2f} 公斤")
 
     def get_validated_input(self, part: Part, prompt: str) -> float:
         while True:
@@ -844,12 +845,12 @@ class CalculateApp:
                     raise exceptions.RestartError
                 case CalculateCommand.PREVIOUS.value:
                     if part.pre_real_load_capacity is None:
-                        utils.print_error(f"{part.name}'s value not found.")
+                        utils.print_error(f"未找到 {part.name} 的值。")
                         continue
                     raise exceptions.PreviousError
                 case CalculateCommand.PREVIOUS_REMAINING.value:
                     if part.pre_real_load_capacity is None:
-                        utils.print_error(f"{part.name}'s value not found.")
+                        utils.print_error(f"未找到 {part.name} 的值。")
                         continue
                     raise exceptions.PreviousRemainingError
                 case CalculateCommand.SKIP.value:
@@ -861,24 +862,24 @@ class CalculateApp:
 
             try:
                 number = float(user_input)
-                if prompt.startswith("Wear"):
+                if prompt.startswith("磨损度"):
                     if not (0 <= number <= 100):
-                        utils.print_error("Wear must be between 0 and 100.")
+                        utils.print_error("磨损度必须在0到100之间。")
                         continue
                 elif number < 0:
-                    utils.print_error("Value must be non-negative.")
+                    utils.print_error("值必须为非负数。")
                     continue
                 return number
             except ValueError:
-                utils.print_error("Invalid input. Please try again.")
+                utils.print_error("无效输入。请重试。")
 
     def reset_stats(self) -> None:
         for part in self.parts:
             part.pre_real_load_capacity = part.real_load_capacity
             part.real_load_capacity = None
         self.result = Table(
-            "Results",
-            title="Tackle's Stats",
+            "结果",
+            title="钓组属性",
             show_header=False,
             box=box.HEAVY,
             min_width=36,
@@ -889,7 +890,7 @@ class CalculateApp:
         if not valid_parts:
             return
         weakest_part = min(valid_parts, key=lambda x: x.real_load_capacity)
-        self.result.add_row("Weakest part", weakest_part.name)
+        self.result.add_row("最薄弱部件", weakest_part.name)
 
         if self.friction_brake.real_load_capacity is None:
             return
@@ -904,27 +905,27 @@ class CalculateApp:
                 ),
             )
             self.result.add_row(
-                "Recommend friction brake",
+                "推荐摩擦制动",
                 f"{int(recommend_friction_brake):2d}",
             )
         except ZeroDivisionError:
-            pass  # Fail silently
+            pass  # 静默失败
 
     def start(self):
-        """Main function to run the friction brake calculation.
+        """运行摩擦制动器计算的主函数。
 
-        Prompts the user for input, calculates the result, and displays them in a table.
+        提示用户输入，计算结果，并在表格中显示它们。
         """
         utils.print_usage_box(
-            "Commands:\n"
-            "r: Restart\n"
-            "s: Skip a part\n"
-            "S: Skip the remaining parts\n"
-            "p: Use previous value for a part\n"
-            "P: Use previous value for the remaing parts\n"
-            "q: Quit"
+            "命令：\n"
+            "r：重新开始\n"
+            "s：跳过一个部件\n"
+            "S：跳过剩余部件\n"
+            "p：对某个部件使用之前的值\n"
+            "P：对剩余部件使用之前的值\n"
+            "q：退出"
         )
-        utils.print_hint_box("Press V and click the gear icon to view the parts.")
+        utils.print_hint_box("按V键并点击齿轮图标查看部件。")
 
         while True:
             self.reset_stats()
@@ -968,19 +969,19 @@ class FrictionBrakeApp(App):
         self.cfg.freeze()
 
         settings = Table(
-            title="Settings", show_header=False, box=box.HEAVY, min_width=36
+            title="设置", show_header=False, box=box.HEAVY, min_width=36
         )
-        settings.add_row("LAUNCH OPTIONS (FINAL)", " ".join(sys.argv[1:]))
-        settings.add_row("Initial friction brake", str(self.cfg.FRICTION_BRAKE.INITIAL))
-        settings.add_row("Max friction brake", str(self.cfg.FRICTION_BRAKE.MAX))
-        settings.add_row("Start delay", str(self.cfg.FRICTION_BRAKE.START_DELAY))
-        settings.add_row("Increase delay", str(self.cfg.FRICTION_BRAKE.INCREASE_DELAY))
-        settings.add_row("Sensitivity", self.cfg.FRICTION_BRAKE.SENSITIVITY)
+        settings.add_row("启动选项（最终）", " ".join(sys.argv[1:]))
+        settings.add_row("初始摩擦制动", str(self.cfg.FRICTION_BRAKE.INITIAL))
+        settings.add_row("最大摩擦制动", str(self.cfg.FRICTION_BRAKE.MAX))
+        settings.add_row("启动延迟", str(self.cfg.FRICTION_BRAKE.START_DELAY))
+        settings.add_row("增加延迟", str(self.cfg.FRICTION_BRAKE.INCREASE_DELAY))
+        settings.add_row("灵敏度", self.cfg.FRICTION_BRAKE.SENSITIVITY)
         print(settings)
 
         utils.print_usage_box(
-            f"Press {self.cfg.KEY.FRICTION_BRAKE_RESET} to reset friction brake, "
-            f"{self.cfg.KEY.FRICTION_BRAKE_QUIT} to quit."
+            f"按 {self.cfg.KEY.FRICTION_BRAKE_RESET} 重置摩擦制动，"
+            f"{self.cfg.KEY.FRICTION_BRAKE_QUIT} 退出。"
         )
 
         self.window = Window()
@@ -991,27 +992,27 @@ class FrictionBrakeApp(App):
         self.friction_brake = FrictionBrake(self.cfg, Lock(), self.detection)
 
     def is_game_window_valid(self) -> bool:
-        """Check if the game window mode and size are valid.
+        """检查游戏窗口模式和大小是否有效。
 
-        :return: True if valid, False otherwise
+        :return: 如果有效返回True，否则返回False
         :rtype: bool
         """
         if self.window.is_title_bar_exist():
-            logger.info("Window mode detected. don't move the game window")
+            logger.info("检测到窗口模式。不要移动游戏窗口")
         if self.window.is_size_supported():
-            logger.info("Supported window size. Don't change the game window size")
+            logger.info("支持的窗口大小。不要更改游戏窗口大小")
             return True
-        logger.critical('Window mode must be "Borderless windowed" or "Window mode"')
+        logger.critical('窗口模式必须是"无边框窗口"或"窗口模式"')
         logger.critical(
-            "Unsupported window size '%s', use '2560x1440', '1920x1080' or '1600x900'",
+            "不支持的窗口大小 '%s'，使用 '2560x1440'、'1920x1080' 或 '1600x900'",
             self.window.get_resolution_str(),
         )
         return False
 
     def _on_release(self, key: keyboard.KeyCode) -> None:
-        """Handle exit and quit events.
+        """处理退出和终止事件。
 
-        :param key: The key that was released.
+        :param key: 被释放的键。
         :type key: keyboard.KeyCode
         """
         key = str(key).lower()
@@ -1022,7 +1023,7 @@ class FrictionBrakeApp(App):
             self.friction_brake.reset(self.cfg.FRICTION_BRAKE.INITIAL)
 
     def start(self):
-        """Wrapper method that handle window activation and result display."""
+        """处理窗口激活和结果显示的包装方法。"""
         listener = keyboard.Listener(on_release=self._on_release)
         listener.start()
         self.window.activate_game_window()

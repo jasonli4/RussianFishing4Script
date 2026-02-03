@@ -54,7 +54,7 @@ class Window:
         if hwnd == 0:
             # logger.critical("Failed to locate the game window: %s", self.game_title)
             logger.critical(
-                "Failed to locate the game window, please open the game and try again"
+                "无法定位游戏窗口，请打开游戏后重试"
             )
             utils.safe_exit()
         return hwnd

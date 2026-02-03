@@ -27,10 +27,10 @@ ANIMATION_DELAY = 0.5
 # ---------------------------------------------------------------------------- #
 #                            common functionalities                            #
 # ---------------------------------------------------------------------------- #
-def ask_for_confirmation(msg: str = "Ready to start") -> None:
-    """Ask for confirmation of user settings if it's enabled.
+def ask_for_confirmation(msg: str = "准备开始") -> None:
+    """在启用时请求确认用户设置。
 
-    :param msg: Confirmation message, defaults to "Ready to start".
+    :param msg: 确认消息，默认为"准备开始"。
     :type msg: str
     """
     while True:
@@ -113,11 +113,11 @@ def print_usage_box(msg: str) -> None:
 
 
 def print_description_box(msg: str) -> None:
-    print(Panel.fit(f"You're now using: {msg}"))
+    print(Panel.fit(f"您正在使用：{msg}"))
 
 
 def print_hint_box(msg: str) -> None:
-    print(Panel.fit(f"Hint: {msg}", style="green"))
+    print(Panel.fit(f"提示：{msg}", style="green"))
 
 
 def print_error(msg: str) -> None:
@@ -126,11 +126,11 @@ def print_error(msg: str) -> None:
 
 def safe_exit():
     if is_run_by_clicking():
-        print_usage_box("Press any key to quit.")
-        # KeyboardInterrupt will mess with stdin, input will crash silently
-        # Use msvcrt.getch() because it doesn't depends on stdin
+        print_usage_box("按任意键退出。")
+        # KeyboardInterrupt会干扰stdin，input会静默崩溃
+        # 使用msvcrt.getch()因为它不依赖stdin
         msvcrt.getch()
-    # Skip this because it will trigger a right click to open context menu
+    # 跳过这个，因为它会触发右键打开上下文菜单
     # pag.mouseUp(button="right", _pause=False)
     pag.keyUp("w", _pause=False)
     pag.keyUp("a", _pause=False)

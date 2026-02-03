@@ -81,7 +81,7 @@ class Tackle:
 
     def reset(self) -> None:
         """Reset the tackle until ready and detect unexpected events."""
-        logger.info("Resetting tackle")
+        logger.info("重置钓组")
 
         if self.stage != StageId.RESET:
             self.stage = StageId.RESET
@@ -115,7 +115,7 @@ class Tackle:
         :param lock: Whether to lock the reel after casting.
         :type lock: bool
         """
-        logger.info("Casting rod")
+        logger.info("抛竿")
         self.stage = StageId.CAST  # Make sure telescopic mode can get different id
         if self.cfg.ARGS.MOUSE:
             self.move_mouse_randomly()
@@ -136,11 +136,11 @@ class Tackle:
 
     def sink(self) -> None:
         """Sink the lure until an event happens, designed for marine and wacky rig."""
-        logger.info("Sinking lure")
+        logger.info("下沉路亚")
         self.timer.set_timeout_start_time()
         while not self.timer.is_sink_stage_timeout():
             if self.detection.is_moving_in_bottom_layer():
-                logger.info("Lure has reached bottom layer")
+                logger.info("路亚已到达底层")
                 sleep(SINK_DELAY)  # Drop to the bottom to make the depth consistent
                 self.timer.print_sink_duration()
                 break
@@ -158,7 +158,7 @@ class Tackle:
         :raises exceptions.LineAtEndError: The line is at its end.
         :raises exceptions.LineSnaggedError: The line is snagged.
         """
-        logger.info("Retrieving fishing line")
+        logger.info("收线")
         if self.stage != StageId.RETRIEVE:
             self.stage = StageId.RETRIEVE
             self.timer.set_timeout_start_time()
@@ -185,7 +185,7 @@ class Tackle:
         :raises exceptions.LineAtEndError: The line is at its end.
         :raises exceptions.LineSnaggedError: The line is snagged.
         """
-        logger.info("Pulling fish")
+        logger.info("提竿")
 
         if self.stage != StageId.PULL:
             self.stage = StageId.PULL
@@ -229,7 +229,7 @@ class Tackle:
 
     def pirk(self) -> None:
         """Start pirking until a fish is hooked."""
-        logger.info("Performing pirking")
+        logger.info("执行抽钓")
 
         if self.stage != StageId.PIRK:
             self.stage = StageId.PIRK
@@ -263,7 +263,7 @@ class Tackle:
 
     def elevate(self) -> None:
         """Perform elevator tactic (drop/rise) until a fish is hooked."""
-        logger.info("Performing elevating")
+        logger.info("执行电梯钓法")
         locked = True  # Reel is locked after tackle.sink()
         dropped = False
         if self.stage != StageId.ELEVATE:
@@ -296,7 +296,7 @@ class Tackle:
 
     def lift(self) -> None:
         """Pull the fish until it's captured."""
-        logger.info("Lifting rod")
+        logger.info("抬竿")
         if self.stage != StageId.LIFT:
             self.stage = StageId.LIFT
             if self.cfg.PROFILE.MODE == "telescopic":
@@ -352,14 +352,14 @@ class Tackle:
 
     def change_gear_ratio_or_electro_mode(self) -> None:
         """Switch the gear ratio or electro assist mode."""
-        logger.info("Changing gear ratio / electro assist mode")
+        logger.info("切换齿轮比/电动辅助模式")
         with pag.hold("ctrl"):
             pag.press("space")
         self.gear_ratio_changed = not self.gear_ratio_changed
 
     def move_mouse_randomly(self) -> None:
         """Randomly move the mouse for four times."""
-        logger.info("Moving mouse randomly")
+        logger.info("随机移动鼠标")
         coords = []
         for _ in range(NUM_OF_MOVEMENT - 1):
             x, y = random.randint(-OFFSET, OFFSET), random.randint(-OFFSET, OFFSET)
@@ -386,7 +386,7 @@ class Tackle:
         :param item: The item to equip (e.g., lure).
         :type item: str
         """
-        logger.info("Equiping new %s from menu", item)
+        logger.info("从菜单装备新 %s", item)
         with pag.hold("b"):
             self._equip_favorite_item(item)
         sleep(ANIMATION_DELAY)
@@ -400,7 +400,7 @@ class Tackle:
         :param item: The item to equip (e.g., dry_mix, groundbait).
         :type item: Literal["dry_mix", "groundbait"]
         """
-        logger.info("Equiping new %s from inventory", item)
+        logger.info("从物品栏装备新 %s", item)
         scrollbar_position = self.detection.get_scrollbar_position()
         if scrollbar_position is None:
             pag.click(utils.get_box_center_integers(self.get_item_position(item)))
@@ -439,7 +439,7 @@ class Tackle:
         :raises exceptions.ItemNotFoundError: The item was not found.
         """
         sleep(ANIMATION_DELAY)
-        logger.info("Looking for favorite items")
+        logger.info("查找收藏物品")
         favorite_item_positions = list(self.detection.get_favorite_item_positions())
         if item == "lure":
             random.shuffle(favorite_item_positions)
@@ -449,7 +449,7 @@ class Tackle:
             if item == "lure" and pag.pixel(x - 70, y + 190) == (178, 59, 30):
                 continue
             pag.click(x - 70, y + 190, clicks=2, interval=0.1)
-            logger.info("New %s equiped successfully", item)
+            logger.info("新 %s 装备成功", item)
             return
 
         # Close selection window when equiping from inventory
@@ -459,14 +459,14 @@ class Tackle:
 
     def _monitor_float_state(self) -> None:
         """Monitor the state of the float."""
-        logger.info("Monitoring float state")
+        logger.info("监控浮漂状态")
         reference_img = pag.screenshot(region=self.detection.float_camera_rect)
         blurred = reference_img.filter(ImageFilter.GaussianBlur(radius=3))
         self.timer.set_timeout_start_time()
         while not self.timer.is_drift_stage_timeout():
             sleep(self.cfg.PROFILE.CHECK_DELAY)
             if self.detection.is_float_state_changed(blurred):
-                logger.info("Float status changed")
+                logger.info("浮漂状态已改变")
                 return
             if self.timer.is_rare_event_checkable():
                 self.check_rare_events()
@@ -474,12 +474,12 @@ class Tackle:
 
     def _monitor_clip_state(self) -> None:
         """Monitor the state of the bolognese clip."""
-        logger.info("Monitoring clip state")
+        logger.info("监控夹子状态")
         self.timer.set_timeout_start_time()
         while not self.timer.is_drift_stage_timeout():
             sleep(self.cfg.PROFILE.CHECK_DELAY)
             if self.detection.is_clip_open():
-                logger.info("Clip status changed")
+                logger.info("夹子状态已改变")
                 return
             if self.timer.is_rare_event_checkable():
                 self.check_rare_events()

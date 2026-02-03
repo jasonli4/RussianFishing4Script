@@ -228,10 +228,10 @@ class Timer:
         """Plot and save an image using rhour and ghour lists from the timer object."""
         cast_rhour_list, cast_ghour_list = self.get_cast_time_list()
         if not cast_rhour_list:
-            logger.warning("No cast record, skip plotting")
+            logger.warning("无抛竿记录，跳过绘图")
             return
 
-        logger.info("Plotting line chart")
+        logger.info("绘制折线图")
 
         _, ax = plt.subplots(nrows=1, ncols=2)
         # _.canvas.manager.set_window_title('Record')
@@ -257,11 +257,11 @@ class Timer:
 
         # plt.tight_layout()
         plt.savefig(str(output_dir / "chart.png"))
-        logger.info("Chart has been saved under logs/")
+        logger.info("图表已保存在logs/目录下")
 
     def print_sink_duration(self):
         logger.info(
-            "Sinking takes %s seconds", int(time.time() - self.timeout_start_time)
+            "下沉耗时 %s 秒", int(time.time() - self.timeout_start_time)
         )
 
     def set_timeout_start_time(self):

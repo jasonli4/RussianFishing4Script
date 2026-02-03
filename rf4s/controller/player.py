@@ -112,15 +112,15 @@ class Player:
             self.friction_brake = FrictionBrake(
                 self.cfg, self.friction_brake_lock, self.detection
             )
-            logger.info("Spawing new process, do not quit the script")
+            logger.info("正在生成新进程，请不要退出脚本")
             self.friction_brake.monitor_process.start()
 
         if self.detection.get_quit_position():
-            logger.warning("Control panel detected, back to the game automatically")
+            logger.warning("检测到控制面板，自动返回游戏")
             pag.press("esc")
             sleep(ANIMATION_DELAY)
 
-        logger.info("Starting fishing mode: '%s'", self.cfg.PROFILE.MODE)
+        logger.info("启动钓鱼模式：'%s'", self.cfg.PROFILE.MODE)
         getattr(self, f"start_{self.cfg.PROFILE.MODE}_mode")()
 
     def hold_down_left_mouse_button(self):
@@ -239,13 +239,13 @@ class Player:
 
     def retrieve_with_pause(self) -> None:
         """Retrieve the line, pausing periodically."""
-        logger.info("Retrieving fishing line with pause")
+        logger.info("暂停方式收线")
         with self.hold_keys(mouse=False, shift=self.cfg.PROFILE.PRE_ACCELERATION):
             self.tackle.special_retrieve(button="left")
 
     def retrieve_with_lift(self) -> None:
         """Retrieve the line, lifting periodically."""
-        logger.info("Retrieving fishing line with lift")
+        logger.info("抬升方式收线")
         with self.hold_keys(mouse=True, shift=self.cfg.PROFILE.PRE_ACCELERATION):
             self.tackle.special_retrieve(button="right")
 
@@ -259,7 +259,7 @@ class Player:
                 self.cast_spod_rod()
 
             self.refill_stats()
-            logger.info("Checking rod %s", self.tackle_idx + 1)
+            logger.info("检查钓竿 %s", self.tackle_idx + 1)
             pag.press(str(self.cfg.KEY.BOTTOM_RODS[self.tackle_idx]))
             sleep(ANIMATION_DELAY)
 
@@ -383,7 +383,7 @@ class Player:
         if not self.cfg.ARGS.REFILL:
             return
 
-        logger.info("Refilling player stats")
+        logger.info("补充玩家属性")
         item1, item2 = ("tea", "carrot") if random.random() < 0.5 else ("tea", "carrot")
 
         with self.hold_keys(mouse=False, shift=False):
@@ -401,7 +401,7 @@ class Player:
         if not self.cfg.ARGS.ALCOHOL or not self.timer.is_alcohol_drinkable():
             return
 
-        logger.info("Drinking alcohol")
+        logger.info("喝酒")
         with self.hold_keys(mouse=False, shift=False):
             for _ in range(self.cfg.STAT.ALCOHOL_PER_DRINK):
                 self._use_item("alcohol")
@@ -420,7 +420,7 @@ class Player:
             if self.cur_coffee > self.cfg.STAT.COFFEE_LIMIT:
                 self.general_quit("Coffee limit reached")
 
-            logger.info("Drinking coffee")
+            logger.info("喝咖啡")
             for _ in range(self.cfg.STAT.COFFEE_PER_DRINK):
                 self._use_item("coffee")
             self.cur_coffee += self.cfg.STAT.COFFEE_PER_DRINK
@@ -432,7 +432,7 @@ class Player:
         :param item: The name of the item to access.
         :type item: str
         """
-        logger.info("Using %s", item)
+        logger.info("使用 %s", item)
         key = str(self.cfg.KEY[item.upper()])
         if key != "-1":  # Use shortcut
             pag.press(key)
@@ -483,7 +483,7 @@ class Player:
         except exceptions.PirkTimeoutError:
             with self.hold_keys(mouse=False, shift=False, reset=True):
                 if self.cfg.PROFILE.DEPTH_ADJUST_DELAY > 0:
-                    logger.info("Adjusting lure depth")
+                    logger.info("调整路亚深度")
                     pag.press("enter")  # Open reel
                     sleep(self.cfg.PROFILE.DEPTH_ADJUST_DELAY)
                     self.tackle.hold_mouse_button(
@@ -536,7 +536,7 @@ class Player:
                 self.cfg.ARGS.RANDOM_CAST
                 and random.random() <= self.cfg.BOT.RANDOM_CAST_PROBABILITY
             ):
-                logger.info("Casting rod redundantly")
+                logger.info("冗余抛竿")
                 pag.click()
                 sleep(BAD_CAST_DELAY)
                 self.reset_tackle()
@@ -657,7 +657,7 @@ class Player:
         if self.cfg.ARGS.TROLLING is None:
             return
         if not self.trolling_started:
-            logger.info("Start trolling")
+            logger.info("开始拖钓")
             pag.press(TROLLING_KEY)
         if self.cfg.ARGS.TROLLING not in ("left", "right"):  # Forward
             return
@@ -705,11 +705,11 @@ class Player:
 
         with self.hold_keys(mouse=False, shift=False):
             if self.timer.is_lure_changeable():
-                logger.info("Changing lure randomly")
+                logger.info("随机更换路亚")
                 try:
                     self.tackle.equip_item("lure")
                 except exceptions.ItemNotFoundError:
-                    logger.error("New lure not found")
+                    logger.error("未找到新路亚")
                     self.have_new_lure = False
 
     def _refill_pva(self) -> None:
@@ -722,7 +722,7 @@ class Player:
                 try:
                     self.tackle.equip_item("pva")
                 except exceptions.ItemNotFoundError:
-                    logger.error("New pva not found")
+                    logger.error("未找到新PVA")
                     self.have_new_pva = False
 
     def _refill_dry_mix(self) -> None:
@@ -734,7 +734,7 @@ class Player:
             try:
                 self.tackle.equip_item("dry_mix")
             except exceptions.ItemNotFoundError:
-                logger.error("New dry mix not found")
+                logger.error("未找到新干散饵")
                 if not self.using_spod_rod:
                     self.tackle.available = False
                 self.have_new_dry_mix = False
@@ -746,13 +746,13 @@ class Player:
             return
 
         if self.detection.is_groundbait_chosen():
-            logger.info("Groundbait is not used up yet")
+            logger.info("打窝饵尚未用尽")
         else:
             with self.hold_keys(mouse=False, shift=False):
                 try:
                     self.tackle.equip_item("groundbait")
                 except exceptions.ItemNotFoundError:
-                    logger.error("New groundbait not found")
+                    logger.error("未找到新打窝饵")
                     self.have_new_groundbait = False
 
     # TBD: Menu, Plotter, Result, Handler
@@ -769,7 +769,7 @@ class Player:
             monitor = self.tackle._monitor_float_state
         else:
             if self.detection.is_clip_open():
-                logger.warning("Clip is not set, fall back to camera mode")
+                logger.warning("未设置夹子，回退到相机模式")
                 monitor = self.tackle._monitor_float_state
             else:
                 monitor = self.tackle._monitor_clip_state
@@ -779,7 +779,7 @@ class Player:
 
     def _pause_script(self) -> None:
         """Pause the script for a specified duration."""
-        logger.info("Pausing script")
+        logger.info("暂停脚本")
         with self.hold_keys(mouse=False, shift=False):
             pag.press("esc")
             sleep(add_jitter(self.cfg.BOT.PAUSE_DURATION))
@@ -845,7 +845,7 @@ class Player:
         if not self.detection.is_fish_captured():
             return
         sleep(add_jitter(LOOP_DELAY))  # it's a slow animation ;)
-        logger.info("Handling fish")
+        logger.info("处理鱼类")
         with self.hold_keys(mouse=False, shift=False):
             self.handle_events()
             sleep(TAG_ANIMATION_DELAY)
@@ -932,7 +932,7 @@ class Player:
                     send_screenshot(self.cfg, filepath)
                 self.result.card += 1
             else:
-                logger.warning("Unexpected event detected")
+                logger.warning("检测到意外事件")
             pag.press("enter")
             sleep(add_jitter(LOOP_DELAY))
 
@@ -962,7 +962,7 @@ class Player:
 
     def disconnected_quit(self) -> None:
         """Quit the game through the main menu."""
-        logger.critical("Game disconnected")
+        logger.critical("游戏断开连接")
         with self.hold_keys(mouse=False, shift=False):
             pag.press("space")
             # Sleep to bypass the black screen (experimental)
@@ -1001,7 +1001,7 @@ class Player:
                 sleep(TICKET_EXPIRE_DELAY)
                 self.general_quit("Boat ticket expired")
 
-            logger.info("Renewing boat ticket")
+            logger.info("续费船票")
             ticket_loc = self.detection.get_ticket_position(self.cfg.ARGS.BOAT_TICKET)
             if ticket_loc is None:
                 pag.press("esc")  # Close ticket menu
@@ -1015,17 +1015,17 @@ class Player:
     @utils.press_before_and_after("v")
     def _replace_broken_lures(self) -> None:
         """Replace multiple broken lures."""
-        logger.info("Replacing broken lures")
+        logger.info("更换损坏的路亚")
 
         scrollbar_box = self.detection.get_scrollbar_position()
         if scrollbar_box is None:
-            logger.info("Scroll bar not found, changing lures for normal rig")
+            logger.info("未找到滚动条，为正常钓组更换路亚")
             while self._open_broken_lure_menu():
                 self._replace_item()
             pag.press("v")
             return
 
-        logger.info("Scroll bar found, changing lures for dropshot rig")
+        logger.info("找到滚动条，为dropshot钓组更换路亚")
         x, y = utils.get_box_center_integers(scrollbar_box)
         pag.moveTo(x, y)
         for _ in range(5):
@@ -1043,10 +1043,10 @@ class Player:
         :return: True if the broken lure is found, False otherwise.
         :rtype: bool
         """
-        logger.info("Looking for broken lures")
+        logger.info("查找损坏的路亚")
         broken_item_position = self.detection.get_100wear_position()
         if broken_item_position is None:
-            logger.warning("Broken lure not found")
+            logger.warning("未找到损坏的路亚")
             return False
 
         # click item to open selection menu
@@ -1058,7 +1058,7 @@ class Player:
 
     def _replace_item(self) -> None:
         """Replace a broken item with a favorite item."""
-        logger.info("Looking for favorite items")
+        logger.info("查找收藏物品")
         favorite_item_positions = self.detection.get_favorite_item_positions()
         while True:
             favorite_item_position = next(favorite_item_positions, None)
@@ -1071,7 +1071,7 @@ class Player:
             # Check if the lure for replacement is already broken
             x, y = utils.get_box_center_integers(favorite_item_position)
             if pag.pixel(x - 70, y + 190) != (178, 59, 30):  # Magic value ;)
-                logger.info("Lure replaced successfully")
+                logger.info("路亚更换成功")
                 pag.moveTo(x - 70, y + 190)
                 pag.click(clicks=2, interval=0.1)
                 sleep(WEAR_TEXT_UPDATE_DELAY)

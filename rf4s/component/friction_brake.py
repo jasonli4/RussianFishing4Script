@@ -63,7 +63,7 @@ class FrictionBrake:
         :param target: Target friction brake value.
         :type target: int
         """
-        logger.info("Resetting friction brake")
+        logger.info("重置摩擦制动")
         with self.lock:
             sleep(FRICTION_BRAKE_CHANGE_DELAY)  # might be called after change()
             for _ in range(MAX_FRICTION_BRAKE):
@@ -99,7 +99,7 @@ def monitor_friction_brake(friction_brake: FrictionBrake) -> None:
     :param friction_brake: Friction brake controller.
     :type friction_brake: FrictionBrake
     """
-    logger.info("Monitoring friction brake")
+    logger.info("监控摩擦制动")
     pre_time = time()
     fish_hooked = False
     try:

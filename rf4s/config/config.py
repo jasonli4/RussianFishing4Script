@@ -111,6 +111,17 @@ def to_list(profile: dict) -> list:
 
 
 def load_cfg() -> CN:
+    """加载配置文件，确保使用UTF-8编码读取中文内容。"""
     cfg = setup_cfg()
-    cfg.merge_from_file(OUTER_ROOT / "config.yaml")
+    config_path = OUTER_ROOT / "config.yaml"
+
+    # 手动读取UTF-8编码的YAML文件内容，避免Windows GBK编码问题
+    with open(config_path, "r", encoding="utf-8") as f:
+        yaml_content = f.read()
+
+    # 使用CN.load_cfg从字符串加载配置
+    loaded_cfg = CN.load_cfg(yaml_content)
+
+    # 合并加载的配置到默认配置
+    cfg.merge_from_other_cfg(loaded_cfg)
     return cfg

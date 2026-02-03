@@ -1,4 +1,4 @@
-VERSION: "0.8.7"
+VERSION: "0.8.4"
 LANGUAGE: "en"
 KEY:
   TEA: -1
@@ -30,15 +30,18 @@ BOT:
   SMTP_VERIFICATION: true
   SNAG_DETECTION: true
   SPOOLING_DETECTION: true
+  # SPOOL_CONFIDENCE: 0.98
   SPOOL_CONFIDENCE: 0.98
-  SPOOL_RETRIEVAL_DELAY: 6.0
+  # SPOOL_RETRIEVAL_DELAY: 6.0
+  SPOOL_RETRIEVAL_DELAY: 5.0
   RAINBOW_RETRIEVAL_DELAY: 3.0
+  # RANDOM_CAST_PROBABILITY: 0.25
   RANDOM_CAST_PROBABILITY: 0.25
   SPOD_ROD_RECAST_DELAY: 1800
   LURE_CHANGE_DELAY: 1800
-  PAUSE_DELAY: 1800
+  PAUSE_DELAY: 2400
   GEAR_RATIO_DELAY: 64
-  PAUSE_DURATION: 600
+  PAUSE_DURATION: 360
   CLICK_LOCK: false
   KEEPNET:
     CAPACITY: 100
@@ -56,12 +59,22 @@ BOT:
     DISCORD_WEBHOOK_URL: ""
     TELEGRAM_BOT_TOKEN: ""
     TELEGRAM_CHAT_ID: -1
+  # FRICTION_BRAKE:
+  #   INITIAL: 23
+  #   MAX: 30
+  #   START_DELAY: 2.0
+  #   INCREASE_DELAY: 1.0
+  #   DECREASE_DELAY: 1.0
+  #   SENSITIVITY: "high" 
+  # Big Gold------     
   FRICTION_BRAKE:
-    INITIAL: 29
+    INITIAL: 19
     MAX: 30
-    START_DELAY: 2.0
-    INCREASE_DELAY: 0.04
-    DECREASE_DELAY: 0.04
+    START_DELAY: 0.5
+    INCREASE_DELAY: 0.1
+    DECREASE_DELAY: 0.1
+    # INCREASE_DELAY: 1.0
+    # DECREASE_DELAY: 1.0
     SENSITIVITY: "high"
 CRAFT:
   LAUNCH_OPTIONS: ""
@@ -74,14 +87,23 @@ HARVEST:
 FRICTION_BRAKE:
   LAUNCH_OPTIONS: ""
   INITIAL: 29
-  MAX: 30
+  MAX: 30   
   START_DELAY: 2.0
   INCREASE_DELAY: 1.0
   DECREASE_DELAY: 1.0
-  SENSITIVITY: "high"
+  SENSITIVITY: "high" 
+# Big Gold------  
+# FRICTION_BRAKE:
+#   LAUNCH_OPTIONS: ""
+#   INITIAL: 18
+#   MAX: 25   
+#   START_DELAY: 2.0
+#   INCREASE_DELAY: 1.0
+#   DECREASE_DELAY: 1.0
+#   SENSITIVITY: "high"
 PROFILE:
   SPIN:
-    DESCRIPTION: "Default spin fishing."
+    DESCRIPTION: "匀收。"
     LAUNCH_OPTIONS: ""
     MODE: "spin"
     TYPE: "normal"
@@ -95,8 +117,23 @@ PROFILE:
     PRE_ACCELERATION: false
     POST_ACCELERATION: false
     LIFT_TIMEOUT: 16.0
+  MY_SPIN:
+    DESCRIPTION: "匀收。"
+    LAUNCH_OPTIONS: ""
+    MODE: "spin"
+    TYPE: "normal"
+    CAST_POWER_LEVEL: 5.0
+    CAST_DELAY: 3.5
+    TIGHTEN_DURATION: 0.0
+    RETRIEVAL_DURATION: 0.0
+    RETRIEVAL_DELAY: 0.0
+    RETRIEVAL_TIMEOUT: 256.0
+    RESET_ACCELERATION: false
+    PRE_ACCELERATION: false
+    POST_ACCELERATION: false
+    LIFT_TIMEOUT: 16.0
   SPIN_WITH_PAUSE:
-    DESCRIPTION: "Spin fishing, short pauses."
+    DESCRIPTION: "匀收，停顿"
     LAUNCH_OPTIONS: ""
     MODE: "spin"
     TYPE: "pause"
@@ -110,23 +147,38 @@ PROFILE:
     PRE_ACCELERATION: false
     POST_ACCELERATION: false
     LIFT_TIMEOUT: 16.0
-  SPIN_WITH_LIFT:
-    DESCRIPTION: "Spin fishing, short lifts."
+  2tu Ai-er-KE-hu-biaoshui  SPIN_WITH_PAUSE:
+    DESCRIPTION: "路亚-打表水，艾尔客湖。"
+    LAUNCH_OPTIONS: ""
+    MODE: "spin"
+    TYPE: "pause"
+    CAST_POWER_LEVEL: 5.0
+    CAST_DELAY: 3.5
+    TIGHTEN_DURATION: 1.0
+    RETRIEVAL_DURATION: 0.2
+    RETRIEVAL_DELAY: 1.0
+    RETRIEVAL_TIMEOUT: 256.0
+    RESET_ACCELERATION: true
+    PRE_ACCELERATION: true
+    POST_ACCELERATION: false
+    LIFT_TIMEOUT: 16.0
+  Lower river SPIN_WITH_LIFT:
+    DESCRIPTION: "路亚钓法-抽停打犬步。"
     LAUNCH_OPTIONS: ""
     MODE: "spin"
     TYPE: "lift"
     CAST_POWER_LEVEL: 5.0
-    CAST_DELAY: 6.0
+    CAST_DELAY: 5.0
     TIGHTEN_DURATION: 0.0
-    RETRIEVAL_DURATION: 1.0
-    RETRIEVAL_DELAY: 1.0
+    RETRIEVAL_DURATION: 0.3
+    RETRIEVAL_DELAY: 0.3
     RETRIEVAL_TIMEOUT: 256.0
     RESET_ACCELERATION: false
     PRE_ACCELERATION: false
     POST_ACCELERATION: false
     LIFT_TIMEOUT: 16.0
   BOTTOM:
-    DESCRIPTION: "Default bottom fishing."
+    DESCRIPTION: "三海竿底钓。"
     LAUNCH_OPTIONS: ""
     MODE: "bottom"
     CAST_POWER_LEVEL: 5.0
@@ -138,7 +190,7 @@ PROFILE:
     RANDOM_ROD_SELECTION: true
     LIFT_TIMEOUT: 16.0
   PIRK:
-    DESCRIPTION: "Default marine fishing, strong pirking at the bottom layer."
+    DESCRIPTION: "默认海钓，底层轻抽。"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -157,7 +209,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   PIRK_WITH_RETRIEVAL:
-    DESCRIPTION: "Marine fishing, pirking while retrieving the fishing line."
+    DESCRIPTION: "海钓，轻抽+收线。"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -176,7 +228,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   WACKY_RIG:
-    DESCRIPTION: "Wacky rig fishing, pirking at the bottom layer."
+    DESCRIPTION: "Wacky面条虫钓法，底层抽钓。"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -195,7 +247,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   ELEVATOR:
-    DESCRIPTION: "Marine fishing, elevator pirking, recast the rod after timed out."
+    DESCRIPTION: "海钓，打阶梯。"
     LAUNCH_OPTIONS: ""
     MODE: "elevator"
     CAST_POWER_LEVEL: 1.0
@@ -210,7 +262,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   ELEVATOR_WITH_DROP:
-    DESCRIPTION: "Marine fishing, elevator pirking, lock/unlock the reel to drop the lure after timed out."
+    DESCRIPTION: "海钓，打阶梯-下沉，适合抽竹刀。"
     LAUNCH_OPTIONS: ""
     MODE: "elevator"
     CAST_POWER_LEVEL: 1.0
@@ -225,7 +277,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   TELESCOPIC:
-    DESCRIPTION: "Default float fishing, still water, telescopic rod."
+    DESCRIPTION: "默认浮钓。"
     LAUNCH_OPTIONS: ""
     MODE: "telescopic"
     CAST_POWER_LEVEL: 4.9
@@ -237,7 +289,7 @@ PROFILE:
     CAMERA_SHAPE: "tall"
     LIFT_TIMEOUT: 16.0
   BOLOGNESE:
-    DESCRIPTION: "Default float fishing, flowing water, bolognese rod."
+    DESCRIPTION: "默认浮钓，流水，博洛尼亚竿。"
     LAUNCH_OPTIONS: ""
     MODE: "bolognese"
     CAST_POWER_LEVEL: 5.0
@@ -250,7 +302,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   MATCH:
-    DESCRIPTION: "Default float fishing, flowing water, match rod."
+    DESCRIPTION: "默认浮钓，流水，赛竿。"
     LAUNCH_OPTIONS: ""
     MODE: "bolognese"
     CAST_POWER_LEVEL: 5.0
@@ -262,9 +314,8 @@ PROFILE:
     CAMERA_SHAPE: "tall"
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
-
   Walk the dog | Beluga Venga 10000:
-    DESCRIPTION: "Yama River, speed 50, walk the dog."
+    DESCRIPTION: "亚马河，速度50，犬步。"
     LAUNCH_OPTIONS: ""
     MODE: "spin"
     TYPE: "pause"
@@ -278,8 +329,38 @@ PROFILE:
     PRE_ACCELERATION: false
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
+  Twitching-gu-lun--150-05-- | Beluga Venga 10000:
+    DESCRIPTION: "廓里湖，92:100，速度50，抽动。"
+    LAUNCH_OPTIONS: ""
+    MODE: "spin"
+    TYPE: "pause"
+    CAST_POWER_LEVEL: 5.0
+    CAST_DELAY: 6.0
+    TIGHTEN_DURATION: 0.08
+    RETRIEVAL_DURATION: 0.35
+    RETRIEVAL_DELAY: 1.0
+    RETRIEVAL_TIMEOUT: 256.0
+    RESET_ACCELERATION: false
+    PRE_ACCELERATION: false
+    POST_ACCELERATION: true
+    LIFT_TIMEOUT: 16.0
+  # Twitching-98H8-- | Beluga Venga 10000:
+  #   DESCRIPTION: "Kuori Lake, 92:100, speed 50, twitching."
+  #   LAUNCH_OPTIONS: ""
+  #   MODE: "spin"
+  #   TYPE: "pause"
+  #   CAST_POWER_LEVEL: 3.5
+  #   CAST_DELAY: 4.0
+  #   TIGHTEN_DURATION: 0.08
+  #   RETRIEVAL_DURATION: 0.2
+  #   RETRIEVAL_DELAY: 1.5
+  #   RETRIEVAL_TIMEOUT: 256.0
+  #   RESET_ACCELERATION: false
+  #   PRE_ACCELERATION: false
+  #   POST_ACCELERATION: true
+  #   LIFT_TIMEOUT: 16.0
   Twitching | Beluga Venga 10000:
-    DESCRIPTION: "Kuori Lake, 92:100, speed 50, twitching."
+    DESCRIPTION: "廓里湖，92:100，速度50，抽动。"
     LAUNCH_OPTIONS: ""
     MODE: "spin"
     TYPE: "pause"
@@ -294,7 +375,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   Jig step | Beluga Venga 10000:
-    DESCRIPTION: "Lower Tunguska River, 88:96, speed 50, jig step."
+    DESCRIPTION: "下通古斯卡河，88:96，速度50，铅铅跳底。"
     LAUNCH_OPTIONS: ""
     MODE: "spin"
     TYPE: "pause"
@@ -308,32 +389,78 @@ PROFILE:
     PRE_ACCELERATION: false
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
-  Bottom | c6 | Royal Picker PM98H:
-    DESCRIPTION: "Copper Lake, 67:57."
+  Jig step | 20DS:
+    DESCRIPTION: "下通古斯卡河，88:96，速度50，铅铅跳底。"
+    LAUNCH_OPTIONS: ""
+    MODE: "spin"
+    TYPE: "pause"
+    CAST_POWER_LEVEL: 5.0
+    CAST_DELAY: 6.0
+    #first tighten time
+    # TIGHTEN_DURATION: 0.5
+    TIGHTEN_DURATION: 0.5
+    #tighten continue time
+    # RETRIEVAL_DURATION: 0.5
+    RETRIEVAL_DURATION: 0.5
+    #gap time 
+    # RETRIEVAL_DELAY: 2.0
+    RETRIEVAL_DELAY: 3.0
+    RETRIEVAL_TIMEOUT: 256.0
+    RESET_ACCELERATION: false
+    PRE_ACCELERATION: false
+    POST_ACCELERATION: true
+    LIFT_TIMEOUT: 16.0
+  Jig step | New 68ML:
+    DESCRIPTION: "下通古斯卡河，88:96，速度50，铅铅跳底。"
+    LAUNCH_OPTIONS: ""
+    MODE: "spin"
+    TYPE: "pause"
+    CAST_POWER_LEVEL: 5.0
+    CAST_DELAY: 6.0
+    #first tighten time
+    # TIGHTEN_DURATION: 0.5
+    TIGHTEN_DURATION: 1.5
+    #tighten continue time
+    # RETRIEVAL_DURATION: 0.5
+    RETRIEVAL_DURATION: 0.8
+    #gap time 
+    # RETRIEVAL_DELAY: 2.0
+    RETRIEVAL_DELAY: 2.0
+    RETRIEVAL_TIMEOUT: 256.0
+    RESET_ACCELERATION: false
+    PRE_ACCELERATION: false
+    POST_ACCELERATION: true
+    LIFT_TIMEOUT: 16.0  
+  Bottom |tonghu| | c6 | Royal Picker PM98H:
+    DESCRIPTION: "铜湖，67:57。"
     LAUNCH_OPTIONS: ""
     MODE: "bottom"
-    CAST_POWER_LEVEL: 2.0
+    CAST_POWER_LEVEL: 3.0
     CAST_DELAY: 4.0
     POST_ACCELERATION: false
-    CHECK_DELAY: 16.0
+    # CHECK_DELAY: 16.0
+    CHECK_DELAY: 8.0
     CHECK_MISS_LIMIT: 10
     PUT_DOWN_DELAY: 2.0
     RANDOM_ROD_SELECTION: true
     LIFT_TIMEOUT: 16.0
   Bottom | c12 | Royal Picker PM98H:
-    DESCRIPTION: "Copper Lake, 61:53."
+    DESCRIPTION: "铜湖，61:53。"
     LAUNCH_OPTIONS: ""
     MODE: "bottom"
-    CAST_POWER_LEVEL: 3.5
+    # CAST_POWER_LEVEL: 3.5
+    CAST_POWER_LEVEL: 3.0
     CAST_DELAY: 4.0
     POST_ACCELERATION: false
     CHECK_DELAY: 16.0
+    # CHECK_DELAY: 5.0
     CHECK_MISS_LIMIT: 16
+    # CHECK_MISS_LIMIT: 12
     PUT_DOWN_DELAY: 2.0
     RANDOM_ROD_SELECTION: true
     LIFT_TIMEOUT: 16.0
   Bottom | c17 | Fortuna Carp 360XH:
-    DESCRIPTION: "Old burg Lake, 21:67."
+    DESCRIPTION: "老奥，21:67。"
     LAUNCH_OPTIONS: ""
     MODE: "bottom"
     CAST_POWER_LEVEL: 4.0
@@ -345,10 +472,10 @@ PROFILE:
     RANDOM_ROD_SELECTION: true
     LIFT_TIMEOUT: 16.0
   Bottom | c30 | Royal Picker PM98H:
-    DESCRIPTION: "Copper Lake, 37:32."
+    DESCRIPTION: "铜湖，37:32。"
     LAUNCH_OPTIONS: ""
     MODE: "bottom"
-    CAST_POWER_LEVEL: 4.0
+    CAST_POWER_LEVEL: 5.0
     CAST_DELAY: 4.0
     POST_ACCELERATION: false
     CHECK_DELAY: 64.0
@@ -357,7 +484,7 @@ PROFILE:
     RANDOM_ROD_SELECTION: true
     LIFT_TIMEOUT: 16.0
   Bottom | c35 | Fortuna Carp 360XH:
-    DESCRIPTION: "Amber Lake, 83:145."
+    DESCRIPTION: "琥珀湖，83:145。"
     LAUNCH_OPTIONS: ""
     MODE: "bottom"
     CAST_POWER_LEVEL: 3.0
@@ -369,7 +496,7 @@ PROFILE:
     RANDOM_ROD_SELECTION: true
     LIFT_TIMEOUT: 16.0
   Marine | c20 | strong pirking | SAT Rigal 20 2S:
-    DESCRIPTION: "Norwegian Sea, 30/34m, Atlantic Saury."
+    DESCRIPTION: "挪威海，30/34米"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -388,7 +515,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   Marine | 34/41/55m | movement | SAT Rigal 20 2S:
-    DESCRIPTION: "Norwegian Sea, 34/41/55m."
+    DESCRIPTION: "挪威海，34/41/55米。"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -407,7 +534,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   Marine | 34/41/55m | movement | Reef Albacore 40 DS:
-    DESCRIPTION: "Norwegian Sea, 34/41/55m."
+    DESCRIPTION: "挪威海，34/41/55米。"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -426,7 +553,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   Marine | 34/41/55m | pirking | SAT Rigal 20 2S:
-    DESCRIPTION: "Norwegian Sea, 34/41/55m."
+    DESCRIPTION: "挪威海，34/41/55米。"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -445,7 +572,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   Marine | 34/41/55m | strong pirking | SAT Rigal 20 2S:
-    DESCRIPTION: "Norwegian Sea, 34/41/55m."
+    DESCRIPTION: "挪威海，34/41/55米。"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -464,7 +591,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   Marine | 34/41/55m | strong pirking | Reef Albacore 40 DS:
-    DESCRIPTION: "Norwegian Sea, 34/41/55m."
+    DESCRIPTION: "挪威海，34/41/55米。"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -483,7 +610,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   Marine | 80/88m | movement | Reef Albacore 40 DS:
-    DESCRIPTION: "Norwegian Sea, 80/88m."
+    DESCRIPTION: "挪威海，80/88米。"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -502,7 +629,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   Marine | 80/88m | strong pirking | Reef Albacore 40 DS:
-    DESCRIPTION: "Norwegian Sea, 80/88m."
+    DESCRIPTION: "挪威海，80/88米。"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -521,7 +648,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   Marine | 120/144m | movement | Reef Albacore 40 DS:
-    DESCRIPTION: "Norwegian Sea, 120/144m."
+    DESCRIPTION: "挪威海，120/144米。"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -540,7 +667,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   Marine | 120/144m | strong pirking | Reef Albacore 40 DS:
-    DESCRIPTION: "Norwegian Sea, 120/144m."
+    DESCRIPTION: "挪威海，120/144米。"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -559,7 +686,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   Marine | 215m | movement | Reef Albacore 40 DS:
-    DESCRIPTION: "Norwegian Sea, 215m."
+    DESCRIPTION: "挪威海，215米。"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -577,7 +704,7 @@ PROFILE:
     HOOK_DELAY: 0.5
     POST_ACCELERATION: true
   Marine | 215m | strong pirking | Reef Albacore 40 DS:
-    DESCRIPTION: "Norwegian Sea, 215m."
+    DESCRIPTION: "挪威海，215米。"
     LAUNCH_OPTIONS: ""
     MODE: "pirk"
     CAST_POWER_LEVEL: 1.0
@@ -596,7 +723,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   Match | still water | c10:
-    DESCRIPTION: "Ladoga Lake, 73:55, depth 150cm."
+    DESCRIPTION: "拉多加湖，73:55，水深150厘米。"
     LAUNCH_OPTIONS: ""
     MODE: "bolognese"
     CAST_POWER_LEVEL: 5.0
@@ -609,7 +736,7 @@ PROFILE:
     POST_ACCELERATION: true
     LIFT_TIMEOUT: 16.0
   Telescopic | flow water:
-    DESCRIPTION: "Winding Rivulet, 72:85, depth 18cm"
+    DESCRIPTION: "惟有诺克河，72:85，水深18厘米"
     LAUNCH_OPTIONS: ""
     MODE: "telescopic"
     CAST_POWER_LEVEL: 4.9

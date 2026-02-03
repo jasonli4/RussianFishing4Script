@@ -43,47 +43,47 @@ LOGO = """
 # https://patorjk.com/software/taag/#p=testall&f=3D-ASCII&t=RF4S%0A, ANSI Shadow
 
 FEATURES = (
-    {"name": "Fishing Bot", "command": "bot"},
-    {"name": "Craft Items", "command": "craft"},
-    {"name": "Move Forward", "command": "move"},
-    {"name": "Harvest Baits", "command": "harvest"},
-    {"name": "Auto Friction Brake", "command": "frictionbrake"},
-    {"name": "Calculate Tackle's Stats", "command": "calculate"},
+    {"name": "钓鱼机器人", "command": "bot"},
+    {"name": "制作物品", "command": "craft"},
+    {"name": "自动前行", "command": "move"},
+    {"name": "收集饵料", "command": "harvest"},
+    {"name": "自动摩擦制动", "command": "frictionbrake"},
+    {"name": "计算钓组属性", "command": "calculate"},
 )
 
 BOT_BOOLEAN_ARGUMENTS = (
-    ("t", "tag", "keep only tagged fishes"),
-    ("c", "coffee", "drink coffee if stamina is low during fish fight"),
-    ("a", "alcohol", "drink alcohol before keeping the fish"),
-    ("r", "refill", "consume tea and carrot if hunger or comfort is low"),
-    ("H", "harvest", "harvest baits before casting the rod"),
-    ("L", "lure", "change current lure with a random favorite one, mode: spin"),
-    ("m", "mouse", "move mouse randomly before casting the rod"),
-    ("P", "pause", "pause the script before casting the rod occasionally"),
-    ("RC", "random-cast", "do a redundant rod cast randomly"),
-    ("SC", "skip-cast", "skip the first rod cast"),
-    ("l", "lift", "lift the tackle constantly during a fish fight"),
-    ("e", "electro", "enable electric mode for Electro Raptor series reel"),
-    ("FB", "friction-brake", "adjust friction brake automatically"),
-    ("GR", "gear-ratio", "switch the gear ratio or mode after the retrieval timed out"),
-    ("b", "bite", "save a screenshot in screenshots/ when a fish bite"),
-    ("s", "screenshot", "save a screenshot in screenshots/ after you caught a fish"),
-    ("d", "data", "save fishing data in /logs"),
-    ("E", "email", "send email noticication after the script stop"),
-    ("M", "miaotixing", "send miaotixing notification after the script stop"),
-    ("D", "discord", "send Discord notification after the script stop"),
-    ("TG", "telegram", "send Telegram notification after the script stop"),
-    ("S", "shutdown", "shutdown computer after the script stop"),
-    ("SO", "signout", "sign out instead of closing the game"),
-    ("BL", "broken-lure", "replace broken lures with favorite ones"),
-    ("SR", "spod-rod", "recast spod rod"),
-    ("DM", "dry-mix", "enable dry mix refill, mode: bottom"),
-    ("GB", "groundbait", "enable groundbait refill, mode: bottom"),
-    ("PVA", "pva", "enable pva refill, mode: bottom"),
+    ("t", "tag", "只保留标记的鱼"),
+    ("c", "coffee", "搏鱼时体力低时喝咖啡"),
+    ("a", "alcohol", "存鱼前喝酒"),
+    ("r", "refill", "饥饿或舒适度低时喝茶吃胡萝卜"),
+    ("H", "harvest", "抛竿前收集饵料"),
+    ("L", "lure", "随机更换为收藏的路亚，模式：路亚"),
+    ("m", "mouse", "抛竿前随机移动鼠标"),
+    ("P", "pause", "偶尔在抛竿前暂停脚本"),
+    ("RC", "random-cast", "随机进行额外的抛竿"),
+    ("SC", "skip-cast", "跳过第一次抛竿"),
+    ("l", "lift", "搏鱼时持续提竿"),
+    ("e", "electro", "启用Electro Raptor系列卷线器的电动模式"),
+    ("FB", "friction-brake", "自动调节摩擦制动"),
+    ("GR", "gear-ratio", "收线超时后切换齿轮比或模式"),
+    ("b", "bite", "鱼咬钩时保存截图到screenshots/"),
+    ("s", "screenshot", "钓到鱼后保存截图到screenshots/"),
+    ("d", "data", "在/logs中保存钓鱼数据"),
+    ("E", "email", "脚本停止后发送邮件通知"),
+    ("M", "miaotixing", "脚本停止后发送喵提醒通知"),
+    ("D", "discord", "脚本停止后发送Discord通知"),
+    ("TG", "telegram", "脚本停止后发送Telegram通知"),
+    ("S", "shutdown", "脚本停止后关闭电脑"),
+    ("SO", "signout", "退出登录而非关闭游戏"),
+    ("BL", "broken-lure", "用收藏的路亚替换损坏的路亚"),
+    ("SR", "spod-rod", "重新抛撒打窝竿"),
+    ("DM", "dry-mix", "启用干散饵补充，模式：底钓"),
+    ("GB", "groundbait", "启用打窝饵补充，模式：底钓"),
+    ("PVA", "pva", "启用PVA补充，模式：底钓"),
 )
 
 EPILOG = """
-Docs: https://github.com/dereklee0310/RussianFishing4Script/tree/main/docs/en
+文档：https://github.com/dereklee0310/RussianFishing4Script/tree/main/docs/en
 """
 
 # When running as an executable, use sys.executable to find the config.yaml.
@@ -351,13 +351,13 @@ def setup_parser(cfg: CN) -> tuple[argparse.ArgumentParser, tuple]:
 
 
 def display_features() -> None:
-    """Display a table of available features for user selection.
+    """显示可用功能表供用户选择。
 
-    Shows a formatted table with feature IDs and names.
+    显示带有功能ID和名称的格式化表格。
     """
     table = Table(
-        "Features",
-        title="Select a feature to start 🚀",
+        "功能列表",
+        title="选择一个功能开始 🚀",
         show_header=False,
         box=box.HEAVY,
         min_width=36,
@@ -369,35 +369,34 @@ def display_features() -> None:
 
 
 def get_fid(parser: argparse.ArgumentParser) -> int:
-    """Prompt the user to enter a feature ID and validate the input.
+    """提示用户输入功能ID并验证输入。
 
-    Continuously prompts until a valid feature ID is entered or the
-    user chooses to quit.
+    持续提示直到输入有效的功能ID或用户选择退出。
     """
-    utils.print_usage_box("Enter feature id to use, h to see help message, q to quit.")
+    utils.print_usage_box("输入功能ID，h查看帮助信息，q退出。")
 
     while True:
         user_input = input(">>> ")
         if user_input.isdigit() and 0 <= int(user_input) < len(FEATURES):
             break
         if user_input == "q":
-            print("Bye.")
+            print("再见。")
             sys.exit()
         if user_input == "h":
             parser.print_help()
             continue
-        utils.print_error("Invalid input, please try again.")
+        utils.print_error("无效输入，请重试。")
     return int(user_input)
 
 
 def get_launch_options(parser: argparse.ArgumentParser) -> str:
     utils.print_usage_box(
-        "Enter launch options, Enter to skip, h to see help message, q to quit."
+        "输入启动选项，回车跳过，h查看帮助信息，q退出。"
     )
     while True:
         user_input = input(">>> ")
         if user_input == "q":
-            print("Bye.")
+            print("再见。")
             sys.exit()
         if user_input == "h":
             parser.print_help()
@@ -407,30 +406,30 @@ def get_launch_options(parser: argparse.ArgumentParser) -> str:
 
 
 def get_language():
-    utils.print_usage_box("What's your game language? [(1) en (2) ru (3) q (quit)]")
+    utils.print_usage_box("您的游戏语言是什么？[(1) en (2) ru (3) q (退出)]")
     while True:
         user_input = input(">>> ")
         if user_input.isdigit() and user_input in ("1", "2"):
             break
         if user_input == "q":
-            print("Bye.")
+            print("再见。")
             sys.exit()
-        utils.print_error("Invalid input, please try again.")
+        utils.print_error("无效输入，请重试。")
     return '"en"' if user_input == "1" else '"ru"'
 
 
 def get_click_lock():
     utils.print_usage_box(
-        "Is Windows Mouse ClickLock enabled? [(1) yes (2) no (3) q (quit)]"
+        "Windows鼠标点击锁定是否已启用？[(1) 是 (2) 否 (3) q (退出)]"
     )
     while True:
         user_input = input(">>> ")
         if user_input.isdigit() and user_input in ("1", "2"):
             break
         if user_input == "q":
-            print("Bye.")
+            print("再见。")
             sys.exit()
-        utils.print_error("Invalid input, please try again.")
+        utils.print_error("无效输入，请重试。")
     return "true" if user_input == "1" else "false"
 
 
@@ -454,9 +453,9 @@ def setup_cfg():
     cfg = config.load_cfg()
     if cfg.VERSION < MINIMUM_COMPATIBLE_CONFIG_VERSION:
         logger.critical(
-            "Incompatible config version, some settings has been removed or deprecated\n"
-            "You can delete it to allow the bot to create a new one\n"
-            "Alternatively, see the CHANGELOG to modify config.yaml"
+            "配置文件版本不兼容，某些设置已被删除或弃用\n"
+            "您可以删除它以让机器人创建新的配置文件\n"
+            "或者查看CHANGELOG来修改config.yaml"
         )
         utils.safe_exit()
     return cfg
