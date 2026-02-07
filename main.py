@@ -30,7 +30,7 @@ from rf4s.app import (
     MoveApp,
 )
 
-VERSION = "0.8.7"
+VERSION = "0.9.0"
 MINIMUM_COMPATIBLE_CONFIG_VERSION = "0.8.0"
 LOGO = """
 ██████╗ ███████╗██╗  ██╗███████╗
@@ -80,6 +80,11 @@ BOT_BOOLEAN_ARGUMENTS = (
     ("DM", "dry-mix", "启用干散饵补充，模式：底钓"),
     ("GB", "groundbait", "启用打窝饵补充，模式：底钓"),
     ("PVA", "pva", "启用PVA补充，模式：底钓"),
+    (
+        "NA",
+        "no-animation",
+        "禁用等待星鱼礼物动画，在游戏设置中将 “捕获界面样式” 改为 “简洁”，即可使用此参数",
+    ),
 )
 
 EPILOG = """

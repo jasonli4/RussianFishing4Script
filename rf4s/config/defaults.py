@@ -3,7 +3,7 @@
 from yacs.config import CfgNode as CN
 
 _C = CN()
-_C.VERSION = "0.8.7"
+_C.VERSION = "0.9.0"
 # Game Language (options: en, ru, zh-TW, zh-CN)
 _C.LANGUAGE = "en"
 
@@ -103,6 +103,8 @@ _C.BOT.PAUSE_DURATION = 600
 # Whether the Windows ClickLock is enabled.
 # The time you need to hold down the mouse button must be set to "long".
 _C.BOT.CLICK_LOCK = False
+# Global jitter time scale for delays (delay = delay +- delay * jitter)
+_C.BOT.JITTER_SCALE = 0.2
 
 
 # ---------------------------------------------------------------------------- #
@@ -496,7 +498,7 @@ _C.PROFILE.TELESCOPIC.MODE = "telescopic"
 # For instance, 2.5 cast_power_level equals to 37.5% casting power.
 _C.PROFILE.TELESCOPIC.CAST_POWER_LEVEL = 5.0
 # Time to wait before the lure touches the water and sinks after the rod is cast
-_C.PROFILE.TELESCOPIC.CAST_DELAY = 4.0
+_C.PROFILE.TELESCOPIC.CAST_DELAY = 6.0
 # Sensitivity of float detection
 _C.PROFILE.TELESCOPIC.FLOAT_SENSITIVITY = 0.68
 # Delay between fish bite checks
@@ -526,7 +528,7 @@ _C.PROFILE.BOLOGNESE.MODE = "bolognese"
 # For instance, 2.5 cast_power_level equals to 37.5% casting power.
 _C.PROFILE.BOLOGNESE.CAST_POWER_LEVEL = 5.0
 # Time to wait before the lure touches the water and sinks after the rod is cast
-_C.PROFILE.BOLOGNESE.CAST_DELAY = 4.0
+_C.PROFILE.BOLOGNESE.CAST_DELAY = 6.0
 # Sensitivity of float detection
 _C.PROFILE.BOLOGNESE.FLOAT_SENSITIVITY = 0.68
 # Delay between fish bite checks
@@ -558,7 +560,7 @@ _C.PROFILE.MATCH.MODE = "bolognese"
 # For instance, 2.5 cast_power_level equals to 37.5% casting power.
 _C.PROFILE.MATCH.CAST_POWER_LEVEL = 5.0
 # Time to wait before the lure touches the water and sinks after the rod is cast
-_C.PROFILE.MATCH.CAST_DELAY = 4.0
+_C.PROFILE.MATCH.CAST_DELAY = 6.0
 # Sensitivity of float detection
 _C.PROFILE.MATCH.FLOAT_SENSITIVITY = 0.68
 # Delay between fish bite checks

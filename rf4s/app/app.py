@@ -307,9 +307,11 @@ class BotApp(App):
     def merge_args_to_cfg(self) -> None:
         """Must be called after the profile is correctly configured."""
         if len(self.args.opts) % 2:
-            logger.error("Invalid launch options: '%s'\n"
+            logger.error(
+                "Invalid launch options: '%s'\n"
                 "These arguments are used for config override: '%s'\n",
-                " ".join(sys.argv[1:]), " ".join(self.args.opts)
+                " ".join(sys.argv[1:]),
+                " ".join(self.args.opts),
             )
             sys.exit()
 
@@ -456,7 +458,7 @@ class BotApp(App):
                     pause_listener.start()
 
                 while pause_listener.is_alive():
-                    sleep(THREAD_CHECK_DELAY)
+                    sleep(add_jitter(THREAD_CHECK_DELAY))
 
                 logger.info("重启机器人而不重置记录")
                 self.reload_cfg()
@@ -638,7 +640,7 @@ class MoveApp(App):
             pag.keyDown("shift")
         pag.keyDown("w")
         while listener.is_alive():
-            sleep(THREAD_CHECK_DELAY)
+            sleep(add_jitter(THREAD_CHECK_DELAY))
 
 
 class HarvestApp(App):
@@ -692,7 +694,7 @@ class HarvestApp(App):
             sleep(add_jitter(LOOP_DELAY))
         pag.press("space")
         logger.info("饵料收集成功")
-        sleep(ANIMATION_DELAY)
+        sleep(add_jitter(ANIMATION_DELAY))
 
     def refill_player_stats(self) -> None:
         """使用茶和胡萝卜补充玩家属性。"""
@@ -733,7 +735,7 @@ class HarvestApp(App):
             pag.press(key)
         else:  # 打开食物菜单
             with pag.hold("t"):
-                sleep(ANIMATION_DELAY)
+                sleep(add_jitter(ANIMATION_DELAY))
                 food_position = self.detection.get_food_position(item)
                 pag.moveTo(food_position)
                 pag.click()
