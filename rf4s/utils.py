@@ -91,14 +91,7 @@ def press_before_and_after(key):
 
 
 def is_compiled():
-    """Check if the script is running as a compiled executable.
-
-    Supports both PyInstaller and Nuitka compilation methods.
-    """
-    import sys
-    # PyInstaller sets sys.frozen
-    # Nuitka sets __compiled__
-    return getattr(sys, 'frozen', False) or "__compiled__" in globals()
+    return "__compiled__" in globals()  # Nuitka style
 
 
 def is_run_by_clicking():

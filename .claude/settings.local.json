@@ -4,19 +4,7 @@
       "Bash(find:*)",
       "Bash(grep:*)",
       "Bash(python -c \"\nimport os\nimport re\n\ndef check_chinese_quotes\\(filepath\\):\n    with open\\(filepath, ''r'', encoding=''utf-8''\\) as f:\n        content = f.read\\(\\)\n        lines = content.split\\(''\\\\n''\\)\n    \n    issues = []\n    for i, line in enumerate\\(lines, 1\\):\n        # 检查中文引号 \"\"\"\" 或 \"\"\n        if ''\"\"'' in line or ''\"\"'' in line:\n            issues.append\\(\\(i, line.strip\\(\\)\\)\\)\n    \n    return issues\n\n# 检查所有Python文件\nfor root, dirs, files in os.walk\\(''.''\\):\n    # 跳过虚拟环境\n    if ''.venv'' in root or ''__pycache__'' in root:\n        continue\n    \n    for file in files:\n        if file.endswith\\(''.py''\\):\n            filepath = os.path.join\\(root, file\\)\n            issues = check_chinese_quotes\\(filepath\\)\n            if issues:\n                print\\(f''{filepath}:''\\)\n                for line_num, line in issues:\n                    print\\(f''  Line {line_num}: {line[:100]}''\\)\n\")",
-      "Bash(python:*)",
-      "Bash(uv add:*)",
-      "Bash(dir:*)",
-      "Bash(C:\\\\Python312\\\\python.exe:*)",
-      "Bash(build.bat)",
-      "Bash(cmd:*)",
-      "Bash(pip install:*)",
-      "Bash(C:\\\\Users\\\\lj\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python312\\\\python.exe -m PyInstaller:*)",
-      "Bash(where:*)",
-      "Bash(taskkill:*)",
-      "Bash(\"/c/Program Files/Python312/python.exe\" -m PyInstaller:*)",
-      "Bash(echo:*)",
-      "Bash(ls:*)"
+      "Bash(python:*)"
     ]
   }
 }

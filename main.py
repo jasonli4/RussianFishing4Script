@@ -30,12 +30,6 @@ from rf4s.app import (
     MoveApp,
 )
 
-# 保存原始参数，供 freeze_support() 使用
-_original_argv = sys.argv.copy()
-
-# 在 main() 函数中过滤参数，而不是在模块级别
-# 这样 freeze_support() 可以看到原始的 multiprocessing 参数
-
 VERSION = "0.9.0"
 MINIMUM_COMPATIBLE_CONFIG_VERSION = "0.8.0"
 LOGO = """
@@ -144,7 +138,6 @@ def setup_logging() -> logging.Logger:
                 "filename": "logs/.log",
                 "maxBytes": 10000,
                 "backupCount": 0,
-                "encoding": "utf-8",
             },
         },
         "loggers": {"root": {"level": "INFO", "handlers": ["stdout", "file"]}},
@@ -171,8 +164,6 @@ def setup_parser(cfg: CN) -> tuple[argparse.ArgumentParser, tuple]:
     main_parser.add_argument(
         "-V", "--version", action="version", version=f"RF4S {VERSION}"
     )
-    # 添加 PyInstaller multiprocessing 参数支持（忽略但接受）
-    main_parser.add_argument("--parent_pid", help=argparse.SUPPRESS)
 
     feature_parsers = main_parser.add_subparsers(title="features", dest="feature")
 
@@ -453,7 +444,7 @@ def setup_cfg():
         language = get_language()
         click_lock = get_click_lock()
 
-        with open(Path(INNER_ROOT / "rf4s/config/config.yaml"), "r", encoding="utf-8") as file:
+        with open(Path(INNER_ROOT / "rf4s/config/config.yaml"), "r") as file:
             lines = file.readlines()
             for i, line in enumerate(lines):
                 if line.startswith("LANGUAGE:"):
@@ -461,7 +452,7 @@ def setup_cfg():
                 if line.startswith("  CLICK_LOCK"):
                     lines[i] = f"  CLICK_LOCK: {click_lock}\n"
 
-        with open(config_path, "w", encoding="utf-8") as file:  # shutil.copy
+        with open(config_path, "w") as file:  # shutil.copy
             file.writelines(lines)
 
     cfg = config.load_cfg()
@@ -476,27 +467,7 @@ def setup_cfg():
 
 
 def main() -> None:
-    # 在参数解析之前过滤 PyInstaller multiprocessing 参数
-    # freeze_support() 已经在 __main__ 块中调用过了
-    # 现在可以安全地清理参数了
-    if getattr(sys, 'frozen', False):
-        filtered_argv = []
-        for arg in sys.argv:
-            # 保留正常参数，过滤掉 multiprocessing 的特殊参数
-            # parent_pid=xxx, pipe_handle=xxx 等
-            if '=' not in arg or arg.startswith('--'):
-                # 进一步检查 --multiprocessing-* 参数
-                if not arg.startswith('--multiprocessing-'):
-                    filtered_argv.append(arg)
-        sys.argv = filtered_argv
-
     cfg = setup_cfg()
-
-    # 添加授权检查
-    from rf4s.auth import AuthManager
-    auth_manager = AuthManager(cfg)
-    auth_manager.check_auth()
-
     parser, subparsers = setup_parser(cfg)
     args = parser.parse_args()  # First parse to get {command} {flags}
     utils.print_logo_box(LOGO)  # Print logo here so the help message will not show it
@@ -539,15 +510,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    # PyInstaller multiprocessing 支持
-    # 必须在 if __name__ == "__main__" 块的最开始调用
-    # 在子进程中，这个函数会启动目标函数然后退出
-    # 在主进程中，这个函数什么都不做
-    from multiprocessing import freeze_support
-    freeze_support()
-
-    # freeze_support() 会处理子进程，如果是子进程则不会继续执行
-    # 所以这里只有主进程会到达
     try:
         main()
     except Exception as e:
